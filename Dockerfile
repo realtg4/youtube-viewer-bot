@@ -1,7 +1,7 @@
 # Dockerfile for YouTube Viewer Bot
 FROM python:3.11-slim
 
-# Install system dependencies
+# Install system dependencies (including xvfb for headful browser emulation)
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
@@ -10,9 +10,10 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Google Chrome
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+# Install Google Chrome using modern, secure keyrings (fixing apt-key missing error)
+RUN mkdir -p /etc/apt/keyrings \
+    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg \
+    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
     && apt-get update \
     && apt-get install -y google-chrome-stable \
     && rm -rf /var/lib/apt/lists/*
@@ -34,8 +35,8 @@ RUN mkdir -p /app/chrome_profiles && chmod 755 /app/chrome_profiles
 ENV DISPLAY=:99
 ENV PYTHONUNBUFFERED=1
 
-# Expose port (if needed for monitoring)
-EXPOSE 8080
+# Expose port (Matches Render's default routing if using the Dummy Server hack)
+EXPOSE 10000
 
 # Start command
 CMD ["python", "main.py"]
