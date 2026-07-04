@@ -32,12 +32,12 @@ class PersistentViewerBot:
         self.restart_count = 0
         
         # Configuration - EDIT THESE VALUES
-        self.STREAM_URL = os.getenv('STREAM_URL', "https://www.youtube.com/watch?v=axhNWIwQ2OM")
+        self.STREAM_URL = os.getenv('STREAM_URL', "https://www.youtube.com/watch?v=YOUR_STREAM_ID")
         self.VIDEO_URLS = os.getenv('VIDEO_URLS', "").split(',') if os.getenv('VIDEO_URLS') else []
         self.BOT_MODE = os.getenv('BOT_MODE', 'LIVE').upper()  # LIVE, VIDEO, or MIXED
-        self.VIEWER_COUNT = int(os.getenv('VIEWER_COUNT', '30'))
-        self.MAX_DURATION_MINUTES = int(os.getenv('MAX_DURATION_MINUTES', '60')) or None  # 0 = unlimited
-        self.RESTART_INTERVAL_HOURS = int(os.getenv('RESTART_INTERVAL_HOURS', '2'))  # Restart every 6 hours
+        self.VIEWER_COUNT = int(os.getenv('VIEWER_COUNT', '5'))
+        self.MAX_DURATION_MINUTES = int(os.getenv('MAX_DURATION_MINUTES', '0')) or None  # 0 = unlimited
+        self.RESTART_INTERVAL_HOURS = int(os.getenv('RESTART_INTERVAL_HOURS', '6'))  # Restart every 6 hours
         
         # Clean up video URLs
         self.VIDEO_URLS = [url.strip() for url in self.VIDEO_URLS if url.strip()]
